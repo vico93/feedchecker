@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Site 1",
+    "avatar": "https://example.com/avatar.jpg",
+    "rss_url": "https://example.com/feed",
+    "webhook_url": "https://discord.com/api/webhooks/..."
+  },
+  {
+    "name": "Site 2",
+    "avatar": "https://example.com/avatar.jpg",
+    "rss_url": "https://example.com/feed",
+    "webhook_url": "https://discord.com/api/webhooks/..."
+  }
+]
