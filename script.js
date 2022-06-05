@@ -15,10 +15,6 @@ let parser = new Parser();
 // Lê o arquivo de config
 const config = require("./config.json");
 
-/* for (let i = 0; i < config.length; i++) {
-	console.log(config[i].name);
-} */
-
 // Verifica cada feed do config...
 config.forEach(element => {
 	
@@ -31,5 +27,3 @@ config.forEach(element => {
 	});
 
 });
-
-// console.log(config.length); // DEBUG
