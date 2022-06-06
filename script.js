@@ -16,14 +16,17 @@ let parser = new Parser();
 const config = require("./config.json");
 
 // Verifica cada feed do config...
-config.forEach(element => {
-	
+config.forEach(element => {	
 	parser.parseURL(element.rss_url, function(err, feed) {
-	  console.log(feed);
-
-	  feed.items.forEach(function(entry) {
-		console.log(entry.title + ':' + entry.link);
-	  });
+		// Nome do feed atual
+		console.log(element.name);
+		console.log(feed.title);
+		// Para cada entrada existente no feed...
+		feed.items.forEach(function(entry) {
+			if ()
+			{
+			}
+			console.log(entry.title + ' : ' + entry.link);
+		});
 	});
-
 });
