@@ -8,11 +8,14 @@
 
 /* BIBLIOTECAS */
 const fs = require("fs");
+const path = require('path');
 const Parser = require('rss-parser');
 const { Webhook } = require('discord-webhook-node');
 
 /* VARIÁVEIS GLOBAIS */
 let parser = new Parser();
+const last_timestamp_path = path.join(__dirname, '/last_timestamp');	// Necessário para evitar problemas ao agendar a execução via CRON
+console.log(last_timestamp_path); // DEBUG
 
 /* FUNÇÕES */
 // Essa função monta e envia a mensagem para o Discord via webhook (é invocada no loop principal)
@@ -32,16 +35,15 @@ function envia_mensagem(webhook_url, username, avatar_url, item_title, item_url)
 const config = require("./config.json");
 
 // Verifica se o arquivo last_timestamp não existe (primeira execução?)...
-if (!fs.existsSync("./last_timestamp"))
+if (!fs.existsSync(last_timestamp_path))
 {
 	// Cria o arquivo com o timestamp atual, pra poder realizar as checagens abaixo
 	console.log("[INFO] Arquivo last_timestamp não foi encontrado. Criando e registrando a data atual...");
-	fs.writeFileSync("./last_timestamp", new Date().getTime().toString());
+	fs.writeFileSync(last_timestamp_path, new Date().getTime().toString());
 }
 
 // Lê a timestamp da última execução (ou a recém criada caso seja a primeira execução)
-let last_timestamp = new Date(parseInt(fs.readFileSync("./last_timestamp").toString())).getTime();
-// console.log(last_timestamp); DEBUG
+let last_timestamp = new Date(parseInt(fs.readFileSync(last_timestamp_path).toString())).getTime();
 
 /* LOOP PRINCIPAL*/
 // Verifica cada feed no config...
@@ -67,4 +69,4 @@ config.forEach(feed => {
 });
 
 // Registra a timestamp desta execução para poder checar na próxima execução
-fs.writeFileSync("./last_timestamp", new Date().getTime().toString());
+fs.writeFileSync(last_timestamp_path, new Date().getTime().toString());
