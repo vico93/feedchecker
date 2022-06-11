@@ -57,7 +57,10 @@ config.forEach(feed => {
 			if (item_timestamp - last_timestamp > 0)
 			{
 				// Invoca a função para enviar a publicação como webhook
-				envia_mensagem(feed.webhook_url, feed.name, feed.avatar, entry.title, entry.link);
+				setTimeout(function()
+				{
+					envia_mensagem(feed.webhook_url, feed.name, feed.avatar, entry.title, entry.link);
+				}, 2000);
 			}
 		});
 	});
