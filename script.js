@@ -15,7 +15,7 @@ const { Webhook } = require('discord-webhook-node');
 /* VARIÁVEIS GLOBAIS */
 let parser = new Parser();
 const last_timestamp_path = path.join(__dirname, '/last_timestamp');	// Necessário para evitar problemas ao agendar a execução via CRON
-console.log(last_timestamp_path); // DEBUG
+// console.log(last_timestamp_path); // DEBUG
 
 /* FUNÇÕES */
 // Essa função monta e envia a mensagem para o Discord via webhook (é invocada no loop principal)
