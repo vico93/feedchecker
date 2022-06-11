@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/vico93/feedchecker#readme",
   "dependencies": {
+    "discord-webhook-node": "^1.1.8",
     "rss-parser": "^3.12.0"
   }
 }

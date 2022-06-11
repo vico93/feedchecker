@@ -7,11 +7,26 @@
  */
 
 /* BIBLIOTECAS */
-const Parser = require('rss-parser');
 const fs = require("fs");
+const Parser = require('rss-parser');
+const { Webhook } = require('discord-webhook-node');
 
 /* VARIÁVEIS GLOBAIS */
 let parser = new Parser();
+
+/* FUNÇÕES */
+// Essa função monta e envia a mensagem para o Discord via webhook (é invocada no loop principal)
+function envia_mensagem(webhook_url, username, avatar_url, item_title, item_url)
+{
+	let hook = new Webhook(webhook_url);
+	
+	hook.setUsername(username);
+	hook.setAvatar(avatar_url);
+
+	hook.send(":new:▸ **" + item_title + "**\n:link:▸ " + item_url);
+	
+	console.log("[INFO] Novo item publicado com sucesso!");
+}
 
 // Lê o arquivo de config
 const config = require("./config.json");
@@ -28,18 +43,21 @@ if (!fs.existsSync("./last_timestamp"))
 let last_timestamp = new Date(parseInt(fs.readFileSync("./last_timestamp").toString())).getTime();
 // console.log(last_timestamp); DEBUG
 
-
-// Verifica cada feed do config...
-config.forEach(element => {	
-	parser.parseURL(element.rss_url, function(err, feed) {
-		// Para cada entrada existente no feed...
-		feed.items.forEach(function(entry)
+/* LOOP PRINCIPAL*/
+// Verifica cada feed no config...
+config.forEach(feed => {	
+	parser.parseURL(feed.rss_url, function(err, rss)
+	{
+		// Para cada entrada existente no feed RSS...
+		rss.items.forEach(function(entry)
 		{
+			// Converte a data de publicação de cada item para o formato de timestamp para comparar com a última iteração do script
 			var item_timestamp = new Date(entry.pubDate).getTime();
-			// Se a sobra da data/hora do item menos a data/hora da última verificação é maior que zero (mais recente)
+			// Se a sobra da data da publicação menos a data/hora da última verificação é maior que zero (é mais recente que a última iteração)
 			if (item_timestamp - last_timestamp > 0)
 			{
-				console.log(entry.title + ' : ' + entry.link + " - " + item_timestamp); // ADICIONAR LÓGICA DO WEBHOOK AQUI
+				// Invoca a função para enviar a publicação como webhook
+				envia_mensagem(feed.webhook_url, feed.name, feed.avatar, entry.title, entry.link);
 			}
 		});
 	});
