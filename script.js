@@ -32,7 +32,7 @@ function envia_mensagem(webhook_url, username, avatar_url, item_title, item_url)
 }
 
 // Lê o arquivo de config
-const config = require("./config.json");
+const config = require(__dirname + "/config.json");
 
 // Verifica se o arquivo last_timestamp não existe (primeira execução?)...
 if (!fs.existsSync(last_timestamp_path))
