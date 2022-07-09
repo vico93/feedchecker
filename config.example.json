@@ -1,0 +1,19 @@
+{
+  "frequencia_cron": "* * * * *",
+  "feeds": [
+    {
+      "name": "Site 1",
+	  "type": "rss",
+      "avatar": "https://example.com/avatar.jpg",
+      "rss_url": "https://example.com/feed",
+      "webhook_url": "https://discord.com/api/webhooks/..."
+    },
+    {
+      "name": "Site 2",
+	  "type": "youtube",
+      "avatar": "https://example.com/avatar.jpg",
+      "rss_url": "https://example.com/feed",
+      "webhook_url": "https://discord.com/api/webhooks/..."
+    }
+  ]
+}

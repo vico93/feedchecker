@@ -1,0 +1,24 @@
+{
+  "name": "feedchecker",
+  "version": "2.0.0",
+  "description": "Script simples que criei no Node.JS para verificar em massa um conjunto de feeds e enviar as novidades para cada webhook específico.",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vico93/feedchecker.git"
+  },
+  "author": "Vico",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vico93/feedchecker/issues"
+  },
+  "homepage": "https://github.com/vico93/feedchecker#readme",
+  "dependencies": {
+    "node-cron": "^3.0.1",
+    "rss-parser": "^3.12.0",
+    "uuid": "^8.3.2"
+  }
+}
