@@ -106,7 +106,7 @@ function check_feeds()
 				// Converte o campo de data do item para o formato de timestamp UNIX para comparação...
 				let item_datetime = moment(item.isoDate).unix();
 				// Verifica se o item foi postado APÓS a última verificação...
-				if (item_datetime <= last_timestamp)
+				if (item_datetime >= last_timestamp)
 				{
 					// É mais recente, proceder!
 					post_on_discord(item, feed.channel, feed.create_thread);
