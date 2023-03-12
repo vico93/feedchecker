@@ -60,10 +60,10 @@ function get_last_timestamp()
 	
 }
 // Posta o item dos feeds no canal no Discord especificado na config
-function post_on_discord(feed_item)
+function post_on_discord(feed_item, channel_name, create_thread)
 {
 	// "Pesca" o canal à partir do nome e do tipo (ambos vindos do config)
-	let channel = client.channels.cache.find(ch => ch.name === config.discord.channel_name);
+	let channel = client.channels.cache.find(ch => ch.name === channel_name);
 	
 	// Se o canal foi localizado...
 	if (channel)
@@ -71,7 +71,6 @@ function post_on_discord(feed_item)
 		// Se é um canal de fórum
 		if (channel.type === 15)
 		{
-			console.log("cheguei aqui!" + channel.type);
 			// Cria a postagem
 			channel.threads.create({
 				name: feed_item.title,
@@ -80,10 +79,15 @@ function post_on_discord(feed_item)
 					content: ':link: ' + feed_item.link,
 				},
 			})
-			.then(threadChannel => console.log('[INFO] Notícia postada no canal: ' + threadChannel))
 			.catch(console.error);
 		}
 		// Se for outro canal (Texto?) -- TODO
+		else
+		{
+			// Envia direto para o canal
+			channel.send(':link: ' + feed_item.link)
+			.catch(console.error);
+		}
 	}
 }
 
@@ -105,7 +109,7 @@ function check_feeds()
 				if (item_datetime <= last_timestamp)
 				{
 					// É mais recente, proceder!
-					post_on_discord(item);
+					post_on_discord(item, feed.channel, feed.create_thread);
 				}
 			});
 		});
@@ -125,6 +129,7 @@ client.on('ready', () => {
 /* -------------- FLUXO PRINCIPAL -------------- */
 // Loga no Discord
 client.login(config.discord.bot_token);
+check_feeds();
 
 // Verifica se a frequência CRON passada na config é válida. Se for, passa à variável cron_frequency (caso contrário fica o valor inicial dela)
 if (cron.validate(config.cron.frequency))

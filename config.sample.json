@@ -1,14 +1,15 @@
 {
   "discord": {
-    "bot_token": "INSIRA AQUI",
-	"channel_name": "noticias"
+    "bot_token": "INSIRA AQUI"
   },
   "cron": {
     "frequency": "*/30 * * * *"
   },
   "feeds": [
     {
-      "url": "https://example.org"
+      "url": "https://example.org",
+	  "channel": "news",
+	  "create_thread": false
     }
   ]
 }
