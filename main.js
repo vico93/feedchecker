@@ -129,7 +129,6 @@ client.on('ready', () => {
 /* -------------- FLUXO PRINCIPAL -------------- */
 // Loga no Discord
 client.login(config.discord.bot_token);
-check_feeds();
 
 // Verifica se a frequência CRON passada na config é válida. Se for, passa à variável cron_frequency (caso contrário fica o valor inicial dela)
 if (cron.validate(config.cron.frequency))
