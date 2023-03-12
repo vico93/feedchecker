@@ -1,0 +1,17 @@
+[
+  {
+    "url": "https://example.org",
+    "feed_type": "GOOGLE_NEWS",
+    "webhook_url": "https://example.org"
+  },
+  {
+    "url": "https://example.org",
+    "feed_type": "YOUTUBE_CHANNEL",
+    "webhook_url": "https://example.org"
+  },
+  {
+    "url": "https://example.org",
+    "feed_type": "NORMAL_WEBSITE",
+    "webhook_url": "https://example.org"
+  }
+]

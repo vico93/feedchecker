@@ -1,0 +1,23 @@
+{
+  "name": "feedchecker",
+  "version": "1.0.0",
+  "description": "Lê uma lista JSON com URLs de feeds e posta os items de cada um em webhooks",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vico93/feedchecker.git"
+  },
+  "keywords": [
+    "discord",
+    "rss"
+  ],
+  "author": "Vico",
+  "license": "SEE LICENSE IN LICENSE.MD",
+  "bugs": {
+    "url": "https://github.com/vico93/feedchecker/issues"
+  },
+  "homepage": "https://github.com/vico93/feedchecker#readme"
+}
