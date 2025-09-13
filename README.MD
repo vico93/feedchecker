@@ -23,7 +23,7 @@ source .venv/bin/activate
 ### 3. Instalar dependências
 
 ```bash
-pip install requests feedparser
+pip install requests feedparser markdownify
 ```
 
 ---
@@ -40,7 +40,8 @@ Use o exemplo abaixo como referência:
     "webhook_url": "https://discord.com/api/webhooks/123/abc",
     "webhook_title": "Meu Bot",
     "webhook_pfpurl": "https://example.com/avatar.png",
-    "is_forum_channel": true
+    "is_forum_channel": true,
+    "tags": ["123456789012345678", "987654321098765432"]
   }
 ]
 ```
@@ -50,6 +51,7 @@ Use o exemplo abaixo como referência:
 > * Cada objeto da lista representa um feed.
 > * Use `"is_forum_channel": true` para canais de fórum — o script criará um tópico para cada item novo.
 > * O título e avatar do webhook são opcionais, mas deixam os posts mais organizados.
+> * O campo `"tags"` é opcional e recebe uma **lista de IDs de tags** (use o modo desenvolvedor do Discord para copiar os IDs das tags do canal de fórum).
 
 ---
 
@@ -110,4 +112,3 @@ journalctl -u feedchecker -f
 ## 📄 Licença
 
 Este projeto é distribuído sob a licença [MIT](LICENSE).
-
