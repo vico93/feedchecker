@@ -16,7 +16,7 @@ cd feedchecker
 ### 2. Criar ambiente virtual (opcional, mas recomendado)
 
 ```bash
-python3 -m venv venv
+python3 -m venv .venv
 source venv/bin/activate
 ```
 
