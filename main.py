@@ -50,10 +50,11 @@ def process_feed(feed, state):
         if counter >= 3 and (url not in state or not state[url]):
             continue
 
-        payload = {
-            "username": feed.get("webhook_title", "Feed Checker"),
-            "avatar_url": feed.get("webhook_pfpurl"),
-        }
+        payload = {}
+        if feed.get("webhook_title") and feed["webhook_title"].strip():
+            payload["username"] = feed["webhook_title"]
+        if feed.get("webhook_pfpurl") and feed["webhook_pfpurl"].strip():
+            payload["avatar_url"] = feed["webhook_pfpurl"]
 
         if feed.get("is_forum_channel"):
             payload["thread_name"] = entry.title[:90]
