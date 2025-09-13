@@ -1,0 +1,9 @@
+[
+  {
+    "rss_url": "https://example.org/feed.xml",
+    "webhook_url": "https://discord.com/api/webhooks/123/abc",
+    "webhook_title": "Meu Bot",
+    "webhook_pfpurl": "https://example.com/avatar.png",
+    "is_forum_channel": true
+  }
+]
