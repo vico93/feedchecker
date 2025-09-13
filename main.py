@@ -29,6 +29,8 @@ def hash_entry(entry):
 
 def process_feed(feed, state):
     url = feed["rss_url"]
+    if url not in state or not isinstance(state[url], list):
+        state[url] = []
     parsed = feedparser.parse(url)
 
     if "entries" not in parsed:
