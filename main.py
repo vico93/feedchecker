@@ -15,10 +15,11 @@ except FileNotFoundError:
 
 def send_to_webhook(feed, entry):
     # Monta payload básico
-    payload = {
-        "username": feed["webhook_title"],
-        "avatar_url": feed["webhook_pfpurl"],
-    }
+    payload = {}
+    if feed.get("webhook_title") and feed["webhook_title"].strip():
+        payload["username"] = feed["webhook_title"]
+    if feed.get("webhook_pfpurl") and feed["webhook_pfpurl"].strip():
+        payload["avatar_url"] = feed["webhook_pfpurl"]
 
     if feed.get("is_forum_channel"):
         payload["thread_name"] = entry.title[:90]  # Nome da thread (máx. 90 chars)
