@@ -65,6 +65,7 @@ def process_feed(feed, state):
             if r.status_code in (200, 204):
                 print(f"[OK] Postado: {entry.title}")
                 state.setdefault(url, []).append(entry_id)
+                save_state(state)
             else:
                 print(f"[ERRO] Falha ao postar {entry.title}: {r.status_code} {r.text}")
         except requests.exceptions.RequestException as e:
