@@ -32,15 +32,23 @@ def process_feed(feed, state):
     if url not in state or not isinstance(state[url], list):
         state[url] = []
     parsed = feedparser.parse(url)
+    if url not in state or not state[url]:
+        entries_to_process = parsed.entries[:3]  # newest 3
+    else:
+        entries_to_process = list(reversed(parsed.entries))
 
     if "entries" not in parsed:
         print(f"[WARN] Nenhuma entrada encontrada em {url}")
         return
 
-    for entry in reversed(parsed.entries):
+    counter = 0
+    for entry in entries_to_process:
         entry_id = hash_entry(entry)
         if entry_id in state.get(url, []):
             continue  # já postado
+
+        if counter >= 3 and (url not in state or not state[url]):
+            continue
 
         payload = {
             "username": feed.get("webhook_title", "Feed Checker"),
@@ -68,6 +76,7 @@ def process_feed(feed, state):
                 print(f"[OK] Postado: {entry.title}")
                 state.setdefault(url, []).append(entry_id)
                 save_state(state)
+                counter += 1
             else:
                 print(f"[ERRO] Falha ao postar {entry.title}: {r.status_code} {r.text}")
         except requests.exceptions.RequestException as e:
