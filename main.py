@@ -1,6 +1,6 @@
 import json
 import time
-import hashlib
+from datetime import datetime, timezone, timedelta
 import os
 import requests
 import feedparser
@@ -23,33 +23,48 @@ def save_state(state):
         json.dump(state, f, indent=2)
 
 
-def hash_entry(entry):
-    return hashlib.sha256(entry.link.encode()).hexdigest()
-
-
 def process_feed(feed, state):
     url = feed["rss_url"]
-    if url not in state or not isinstance(state[url], list):
-        state[url] = []
-    parsed = feedparser.parse(url)
-    if url not in state or not state[url]:
-        entries_to_process = parsed.entries[:3]  # newest 3
-    else:
-        entries_to_process = list(reversed(parsed.entries))
+    now = datetime.now(timezone.utc)
 
+    # Backward compatibility: if old list format, set to now - 1 hour
+    if url in state and isinstance(state[url], list):
+        state[url] = (now - timedelta(hours=1)).isoformat()
+
+    parsed = feedparser.parse(url)
     if "entries" not in parsed:
         print(f"[WARN] Nenhuma entrada encontrada em {url}")
         return
 
-    counter = 0
-    for entry in entries_to_process:
-        entry_id = hash_entry(entry)
-        if entry_id in state.get(url, []):
-            continue  # já postado
+    # Sort entries by published_parsed descending (newest first)
+    def get_entry_time(entry):
+        if 'published_parsed' in entry:
+            return datetime(*entry.published_parsed[:6], tzinfo=timezone.utc)
+        else:
+            # Use a very old date if missing
+            return datetime(1970, 1, 1, tzinfo=timezone.utc)
 
-        if counter >= 3 and (url not in state or not state[url]):
-            continue
+    entries = sorted(parsed.entries, key=get_entry_time, reverse=True)
 
+    entries_to_post = []
+    if url not in state or state[url] is None:
+        # First time: select 3 newest entries
+        entries_to_post = entries[:3]
+    else:
+        # Parse last timestamp
+        last_timestamp_str = state[url]
+        last_timestamp = datetime.fromisoformat(last_timestamp_str)
+        for entry in entries:
+            if 'published_parsed' not in entry:
+                continue
+            entry_dt = datetime(*entry.published_parsed[:6], tzinfo=timezone.utc)
+            if entry_dt > last_timestamp:
+                entries_to_post.append(entry)
+
+    new_entries_count = len(entries_to_post)
+    print(f"[INFO] Found {new_entries_count} new entries for {url}")
+
+    for entry in entries_to_post:
         payload = {}
         if feed.get("webhook_title") and feed["webhook_title"].strip():
             payload["username"] = feed["webhook_title"]
@@ -75,13 +90,14 @@ def process_feed(feed, state):
             r = requests.post(feed["webhook_url"], json=payload, timeout=10)
             if r.status_code in (200, 204):
                 print(f"[OK] Postado: {entry.title}")
-                state.setdefault(url, []).append(entry_id)
-                save_state(state)
-                counter += 1
             else:
                 print(f"[ERRO] Falha ao postar {entry.title}: {r.status_code} {r.text}")
         except requests.exceptions.RequestException as e:
             print(f"[ERRO] Falha de rede: {e}")
+
+    # Update state to current timestamp
+    state[url] = now.isoformat()
+    save_state(state)
 
 
 def main():
