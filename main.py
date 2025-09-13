@@ -46,13 +46,15 @@ def main():
                 continue
 
             last_guid = last_posts.get(feed["rss_url"])
-            new_entries = []
-
-            for entry in rss.entries:
-                guid = entry.get("id") or entry.get("link")
-                if guid == last_guid:
-                    break
-                new_entries.append(entry)
+            if last_guid is None:
+                new_entries = rss.entries[:3]
+            else:
+                new_entries = []
+                for entry in rss.entries:
+                    guid = entry.get("id") or entry.get("link")
+                    if guid == last_guid:
+                        break
+                    new_entries.append(entry)
 
             # Posta do mais antigo pro mais recente
             for entry in reversed(new_entries):
