@@ -83,7 +83,7 @@ After=network.target
 [Service]
 Type=simple
 WorkingDirectory=/caminho/para/feedchecker
-ExecStart=/caminho/para/feedchecker/venv/bin/python3 main.py
+ExecStart=/caminho/para/feedchecker/.venv/bin/python3 main.py
 Restart=always
 RestartSec=10
 

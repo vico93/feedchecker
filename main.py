@@ -2,6 +2,7 @@ import json
 import time
 import requests
 import feedparser
+from markdownify import markdownify as md
 
 CONFIG_FILE = "feeds.json"
 STATE_FILE = "state.json"
@@ -21,9 +22,10 @@ def send_to_webhook(feed, entry):
 
     if feed.get("is_forum_channel"):
         payload["thread_name"] = entry.title[:90]  # Nome da thread (máx. 90 chars)
-        desc = entry.get("summary", "").strip()
+        desc = entry.get("summary", "")
         if desc:
-            payload["content"] = f"{desc}\n\n➡️ {entry.link}"
+            desc_md = md(desc)
+            payload["content"] = f"{desc_md.strip()}\n\n➡️ {entry.link}"
         else:
             payload["content"] = f"➡️ {entry.link}"
     else:
