@@ -23,7 +23,7 @@ Feedchecker, só que agora em Node.JS
 
 1.  **Clone o repositório:**
     ```bash
-    git clone [https://github.com/vico93/feedchecker.git](https://github.com/vico93/feedchecker.git) --branch remake
+    git clone https://github.com/vico93/feedchecker.git --branch remake
     cd feedchecker
     ```
 
