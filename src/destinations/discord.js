@@ -1,6 +1,6 @@
 /*
 ** caminho: src/destinations/discord.js
-** últimaMod: 2025-09-19 11:05
+** últimaMod: 2025-09-19 11:15
 ** autor: Vico
 ** colaboração: Gemini
 */
@@ -16,41 +16,33 @@ import axios from 'axios';
  * @returns {object} O payload pronto para ser enviado para a API do Discord.
  */
 function buildDiscordPayload(bridgeConfig, item) {
-  // Desestrutura os campos que podemos usar da configuração.
   const { destination_type, destination_tags, destination_username, destination_avatar_url } = bridgeConfig;
 
-  // Limpeza e normalização dos dados do item do feed.
   const title = item.title?.trim() ?? 'Título não encontrado';
   const link = item.link ?? 'Link não encontrado';
 
-  // Inicia o payload base apenas com o conteúdo, que é sempre necessário.
-  const baseMessage = {
+  // Inicia o payload base com o conteúdo.
+  const payload = {
     content: `**${title}**\n${link}`
   };
 
-  // Adiciona o nome de usuário customizado APENAS se ele for fornecido na config.
-  // Se não for, o webhook usará seu nome padrão configurado no Discord.
+  // Adiciona o nome de usuário customizado APENAS se ele for fornecido.
   if (destination_username) {
-    baseMessage.username = destination_username;
+    payload.username = destination_username;
   }
 
-  // Adiciona o avatar customizado APENAS se ele for fornecido na config.
-  // Se não for, o webhook usará seu avatar padrão configurado no Discord.
+  // Adiciona o avatar customizado APENAS se ele for fornecido.
   if (destination_avatar_url) {
-    baseMessage.avatar_url = destination_avatar_url;
+    payload.avatar_url = destination_avatar_url;
   }
 
-  // Se o destino for um fórum e tiver tags definidas, monta um payload de criação de thread.
+  // Se o destino for um fórum, adiciona as propriedades de thread ao payload principal.
   if (destination_type === 'forum' && destination_tags?.length) {
-    return {
-      thread_name: title.substring(0, 100), // Título da thread (limite de 100 caracteres)
-      message: baseMessage,
-      applied_tags: destination_tags
-    };
+    payload.thread_name = title.substring(0, 100);
+    payload.applied_tags = destination_tags;
   }
 
-  // Caso contrário, retorna o payload de mensagem simples.
-  return baseMessage;
+  return payload;
 }
 
 /* --- FUNÇÕES EXPORTADAS --- */
@@ -64,12 +56,11 @@ export async function sendToDiscord(bridgeConfig, item) {
   const payload = buildDiscordPayload(bridgeConfig, item);
   
   try {
-    await axios.post(bridgeConfig.destination_url, payload, {
+    await axios.post(bridge.destination_url, payload, {
       headers: { 'Content-Type': 'application/json' }
     });
     console.log(`[Discord][SUCCESS] Item "${item.title}" enviado com sucesso.`);
   } catch (error) {
-    // Log detalhado do erro, mostrando a resposta da API do Discord se disponível.
     const errorMessage = error.response?.data || error.message;
     console.error(`[Discord][ERROR] Falha ao enviar para o webhook:`, errorMessage);
   }
