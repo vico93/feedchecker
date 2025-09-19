@@ -56,7 +56,7 @@ export async function sendToDiscord(bridgeConfig, item) {
   const payload = buildDiscordPayload(bridgeConfig, item);
   
   try {
-    await axios.post(bridge.destination_url, payload, {
+    await axios.post(bridgeConfig.destination_url, payload, {
       headers: { 'Content-Type': 'application/json' }
     });
     console.log(`[Discord][SUCCESS] Item "${item.title}" enviado com sucesso.`);
