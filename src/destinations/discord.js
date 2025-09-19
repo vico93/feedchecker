@@ -1,8 +1,8 @@
 /*
 ** caminho: src/destinations/discord.js
-** últimaMod: 2025-09-18 21:40
+** últimaMod: 2025-09-19 11:05
 ** autor: Vico
-** colaboração: Gemini 2.5 Pro
+** colaboração: Gemini
 */
 
 import axios from 'axios';
@@ -16,18 +16,29 @@ import axios from 'axios';
  * @returns {object} O payload pronto para ser enviado para a API do Discord.
  */
 function buildDiscordPayload(bridgeConfig, item) {
-  const { destination_type, destination_tags } = bridgeConfig;
+  // Desestrutura os campos que podemos usar da configuração.
+  const { destination_type, destination_tags, destination_username, destination_avatar_url } = bridgeConfig;
 
   // Limpeza e normalização dos dados do item do feed.
   const title = item.title?.trim() ?? 'Título não encontrado';
   const link = item.link ?? 'Link não encontrado';
 
-  // Payload base, comum a todos os tipos de mensagem.
+  // Inicia o payload base apenas com o conteúdo, que é sempre necessário.
   const baseMessage = {
-    username: item.creator || item.author || item.title.substring(0, 80) || 'Feed Checker',
-    avatar_url: "https://i.imgur.com/R66g1Pe.png", 
     content: `**${title}**\n${link}`
   };
+
+  // Adiciona o nome de usuário customizado APENAS se ele for fornecido na config.
+  // Se não for, o webhook usará seu nome padrão configurado no Discord.
+  if (destination_username) {
+    baseMessage.username = destination_username;
+  }
+
+  // Adiciona o avatar customizado APENAS se ele for fornecido na config.
+  // Se não for, o webhook usará seu avatar padrão configurado no Discord.
+  if (destination_avatar_url) {
+    baseMessage.avatar_url = destination_avatar_url;
+  }
 
   // Se o destino for um fórum e tiver tags definidas, monta um payload de criação de thread.
   if (destination_type === 'forum' && destination_tags?.length) {
