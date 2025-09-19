@@ -23,6 +23,7 @@
     "axios": "^1.12.2",
     "better-sqlite3": "^12.2.0",
     "node-cron": "^4.2.1",
-    "rss-parser": "^3.13.0"
+    "rss-parser": "^3.13.0",
+    "turndown": "^7.2.1"
   }
 }

@@ -6,6 +6,10 @@
 */
 
 import axios from 'axios';
+import TurndownService from 'turndown';
+
+/* --- INICIALIZAÇÃO --- */
+const turndownService = new TurndownService();
 
 /* --- FUNÇÕES INTERNAS --- */
 
@@ -21,9 +25,17 @@ function buildDiscordPayload(bridgeConfig, item) {
   const title = item.title?.trim() ?? 'Título não encontrado';
   const link = item.link ?? 'Link não encontrado';
 
-  // Inicia o payload base com o conteúdo.
+  // Converte o conteúdo HTML (se existir) para Markdown.
+  // Se 'item.content' não existir, usa uma string vazia.
+  const contentAsMarkdown = item.content ? turndownService.turndown(item.content) : '';
+
+  // Limita o conteúdo a 1800 caracteres para segurança, perto do limite do Discord.
+  const truncatedContent = contentAsMarkdown.substring(0, 1800);
+
+  // Inicia o payload base com o novo conteúdo em Markdown.
   const payload = {
-    content: `**${title}**\n${link}`
+    // Agora, o corpo da mensagem é o conteúdo do post, e o link vai no final.
+    content: `${truncatedContent}\n\n➡️ ${link}`
   };
 
   // Adiciona o nome de usuário customizado APENAS se ele for fornecido.
@@ -36,7 +48,7 @@ function buildDiscordPayload(bridgeConfig, item) {
     payload.avatar_url = destination_avatar_url;
   }
 
-  // Se o destino for um fórum, adiciona as propriedades de thread ao payload principal.
+  // Se o destino for um fórum, usa o TÍTULO do post para o nome da thread.
   if (destination_type === 'forum' && destination_tags?.length) {
     payload.thread_name = title.substring(0, 100);
     payload.applied_tags = destination_tags;
