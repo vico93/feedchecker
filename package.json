@@ -1,0 +1,28 @@
+{
+  "name": "feedchecker",
+  "version": "2.0.0",
+  "description": "Verifica feeds RSS e posta no Discord via webhooks",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vico93/feedchecker.git"
+  },
+  "keywords": [],
+  "author": "Vico",
+  "license": "MIT",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/vico93/feedchecker/issues"
+  },
+  "homepage": "https://github.com/vico93/feedchecker#readme",
+  "dependencies": {
+    "axios": "^1.12.2",
+    "better-sqlite3": "^12.2.0",
+    "node-cron": "^4.2.1",
+    "rss-parser": "^3.13.0"
+  }
+}

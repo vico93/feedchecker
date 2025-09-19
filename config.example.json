@@ -1,0 +1,17 @@
+[
+  {
+    "source_type": "rss",
+    "source_url": "https://foo.bar/feed/",
+    "destination_url": "URL_DO_SEU_WEBHOOK_AQUI",
+    "destination_type": "forum",
+    "destination_tags": [
+      "12345678901234567890"
+    ]
+  },
+  {
+    "source_type": "rss",
+    "source_url": "https://bar.foo/feed/",
+    "destination_url": "URL_DO_SEU_OUTRO_WEBHOOK_AQUI",
+    "destination_type": "normal"
+  }
+]
