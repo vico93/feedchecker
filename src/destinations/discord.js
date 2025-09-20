@@ -1,77 +1,26 @@
 /*
 ** caminho: src/destinations/discord.js
-** últimaMod: 2025-09-19 11:15
+** últimaMod: 2025-09-20 20:05
 ** autor: Vico
-** colaboração: Gemini
+** colaboração: Gemini 2.5 Pro
 */
 
 import axios from 'axios';
-import TurndownService from 'turndown';
-
-/* --- INICIALIZAÇÃO --- */
-const turndownService = new TurndownService();
-
-/* --- FUNÇÕES INTERNAS --- */
-
-/**
- * Monta o payload correto para o webhook do Discord baseado no tipo de canal.
- * @param {object} bridgeConfig - A configuração da ponte (do config.json).
- * @param {import('rss-parser').Item} item - O item do feed a ser enviado.
- * @returns {object} O payload pronto para ser enviado para a API do Discord.
- */
-function buildDiscordPayload(bridgeConfig, item) {
-  const { destination_type, destination_tags, destination_username, destination_avatar_url } = bridgeConfig;
-
-  const title = item.title?.trim() ?? 'Título não encontrado';
-  const link = item.link ?? 'Link não encontrado';
-
-  // Converte o conteúdo HTML (se existir) para Markdown.
-  // Se 'item.content' não existir, usa uma string vazia.
-  const contentAsMarkdown = item.content ? turndownService.turndown(item.content) : '';
-
-  // Limita o conteúdo a 1800 caracteres para segurança, perto do limite do Discord.
-  const truncatedContent = contentAsMarkdown.substring(0, 1800);
-
-  // Inicia o payload base com o novo conteúdo em Markdown.
-  const payload = {
-    // Agora, o corpo da mensagem é o conteúdo do post, e o link vai no final.
-    content: `${truncatedContent}\n\n➡️ ${link}`
-  };
-
-  // Adiciona o nome de usuário customizado APENAS se ele for fornecido.
-  if (destination_username) {
-    payload.username = destination_username;
-  }
-
-  // Adiciona o avatar customizado APENAS se ele for fornecido.
-  if (destination_avatar_url) {
-    payload.avatar_url = destination_avatar_url;
-  }
-
-  // Se o destino for um fórum, usa o TÍTULO do post para o nome da thread.
-  if (destination_type === 'forum' && destination_tags?.length) {
-    payload.thread_name = title.substring(0, 100);
-    payload.applied_tags = destination_tags;
-  }
-
-  return payload;
-}
 
 /* --- FUNÇÕES EXPORTADAS --- */
 
 /**
- * Envia um item para um webhook do Discord.
- * @param {object} bridgeConfig - A configuração da ponte (do config.json).
- * @param {import('rss-parser').Item} item - O item do feed a ser enviado.
+ * Envia um payload pré-montado para um webhook do Discord.
+ * @param {string} webhookUrl - A URL do webhook de destino.
+ * @param {object} payload - O objeto de payload já formatado.
  */
-export async function sendToDiscord(bridgeConfig, item) {
-  const payload = buildDiscordPayload(bridgeConfig, item);
-  
+export async function sendToDiscord(webhookUrl, payload) {
   try {
-    await axios.post(bridgeConfig.destination_url, payload, {
+    await axios.post(webhookUrl, payload, {
       headers: { 'Content-Type': 'application/json' }
     });
-    console.log(`[Discord][SUCCESS] Item "${item.title}" enviado com sucesso.`);
+    // O log agora é mais genérico, pois não sabe o "título" do item.
+    console.log(`[Discord][SUCCESS] Payload enviado com sucesso.`);
   } catch (error) {
     const errorMessage = error.response?.data || error.message;
     console.error(`[Discord][ERROR] Falha ao enviar para o webhook:`, errorMessage);

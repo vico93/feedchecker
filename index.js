@@ -1,6 +1,6 @@
 /*
 ** caminho: index.js
-** últimaMod: 2025-09-18 21:40
+** últimaMod: 2025-09-20 20:05
 ** autor: Vico
 ** colaboração: Gemini 2.5 Pro
 */
@@ -12,11 +12,9 @@ import { sendToDiscord } from './src/destinations/discord.js';
 import { getLastItem, setLastItem } from './src/storage.js';
 
 /* --- INICIALIZAÇÃO --- */
-
-console.log('[Main][INFO] ✅ Feedchecker 2.0 iniciado. Aguardando a primeira execução agendada...');
+console.log('[Main][INFO] ✅ FeedChecker iniciado. Aguardando a primeira execução agendada...');
 
 /* --- LÓGICA PRINCIPAL (CRON) --- */
-
 // Agenda a tarefa para rodar a cada 5 minutos ('*/5 * * * *').
 cron.schedule('*/5 * * * *', async () => {
   console.log(`\n[Cron][INFO] 🚀 [${new Date().toLocaleString('pt-BR')}] Executando verificação de feeds...`);
@@ -25,8 +23,8 @@ cron.schedule('*/5 * * * *', async () => {
   try {
     config = JSON.parse(await fs.readFile('config.json', 'utf-8'));
   } catch (error) {
-    console.error('[Cron][ERROR] Erro ao ler o arquivo "config.json". Verifique se ele existe e está correto.', error.message);
-    return; // Para a execução da tarefa se não conseguir ler a configuração.
+    console.error('[Cron][ERROR] Erro ao ler o arquivo "config.json".', error.message);
+    return;
   }
     
   for (const bridge of config) {
@@ -35,21 +33,21 @@ cron.schedule('*/5 * * * *', async () => {
     // 1. Busca no banco de dados o último item processado para esta fonte.
     const lastItemId = getLastItem(bridge.source_url);
 
-    // 2. Busca os novos itens do feed.
     // No futuro, um switch/case pode ser usado para diferentes `source_type`.
-    const newItems = await fetchRss(bridge.source_url, lastItemId);
+    // A função de fetch recebe a config inteira do bridge.
+    const newPayloads = await fetchRss(bridge, lastItemId);
 
-    if (newItems.length === 0) {
+    if (newPayloads.length === 0) {
       console.log(`[Cron][INFO] ✔️  Nenhum item novo para ${bridge.source_url}.`);
-      continue; // Pula para a próxima "ponte" da configuração.
+      continue;
     }
       
-    // 3. Itera sobre os novos itens, envia para o Discord e atualiza o banco.
-    for (const item of newItems) {
-      await sendToDiscord(bridge, item);
+    for (const item of newPayloads) {
+      // A função de envio recebe a URL e o payload separadamente.
+      await sendToDiscord(bridge.destination_url, item.payload);
       
       // Salva o estado no banco de dados após cada envio bem-sucedido.
-      // O 'guid' é a propriedade mais confiável para ID único em feeds RSS.
+      // O guid do item vem junto no objeto retornado pelo fetcher.
       setLastItem(bridge.source_url, item.guid);
       
       // Uma pequena pausa de 1 segundo para não sobrecarregar a API do Discord (rate limiting).
