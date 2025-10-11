@@ -1,6 +1,6 @@
 /*
 ** caminho: src/destinations/discord.js
-** últimaMod: 2025-10-11 01:51
+** últimaMod: 2025-10-11 03:14
 ** autor: Vico
 ** colaboração: Gemini 2.5 Pro, GLM 4.5
 */
@@ -56,8 +56,19 @@ export async function sendToDiscordWithFile(webhookUrl, payload, filePath, fileF
     form.append('payload_json', JSON.stringify(payload));
     
     // Adiciona o arquivo
-    const fileStream = fs.createReadStream(filePath);
-    form.append(fileFieldName, fileStream, fileName);
+    // Lê o arquivo como um Buffer para evitar problemas com FormData e streams
+    console.log(`[Discord][DEBUG] Lendo arquivo: ${filePath}`);
+    const fileBuffer = fs.readFileSync(filePath);
+    console.log(`[Discord][DEBUG] Buffer criado: ${fileBuffer.length} bytes`);
+
+    // Cria um Blob a partir do Buffer
+    console.log(`[Discord][DEBUG] Criando Blob a partir do Buffer`);
+    const fileBlob = new Blob([fileBuffer]);
+    console.log(`[Discord][DEBUG] Blob criado: ${fileBlob.size} bytes, tipo: ${fileBlob.type}`);
+
+    // Adiciona o Blob ao FormData
+    console.log(`[Discord][DEBUG] Adicionando ao FormData: campo=${fileFieldName}, nome=${fileName}`);
+    form.append(fileFieldName, fileBlob, fileName);
 
     // Envia a requisição usando fetch (Node 18+)
     const response = await fetch(webhookUrl, {
