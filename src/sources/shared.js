@@ -1,8 +1,8 @@
 /*
 ** caminho: src/sources/shared.js
-** últimaMod: 2025-10-11 05:17
+** últimaMod: 2025-10-11 05:38
 ** autor: Vico
-** colaboração: Roo
+** colaboração: Roo, Roo Sonic (xai/grok-code-fast-1)
 */
 
 import http from 'http';
@@ -10,6 +10,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { isInstagramUrl, downloadInstagramVideo, cleanupFile } from '../instagramHelper.js';
 import { sendToDiscord, sendToDiscordWithFile } from '../destinations/discord.js';
+import { fetchOpenGraphData } from '../opengraphHelper.js';
 
 /* --- FUNÇÕES AUXILIARES --- */
 
@@ -163,7 +164,21 @@ export function startSharedServer(config, bridges) {
           
           // Se for forum, adiciona thread_name e applied_tags
           if (bridge.destination_type === 'forum') {
-            payload.thread_name = deriveTitle(url);
+            /* --- Busca dados Open Graph para enriquecer a postagem --- */
+            const ogData = await fetchOpenGraphData(url);
+            
+            // Define o título do thread usando og:title ou fallback para deriveTitle
+            if (ogData.title && ogData.title.trim()) {
+              payload.thread_name = ogData.title;
+            } else {
+              payload.thread_name = deriveTitle(url);
+            }
+            
+            // Adiciona a descrição Open Graph ao conteúdo, se existir
+            if (ogData.description && ogData.description.trim()) {
+              payload.content = `📄 ${ogData.description}\n\n${payload.content}`;
+            }
+            
             if (bridge.destination_tags) {
               payload.applied_tags = bridge.destination_tags;
             }
@@ -198,7 +213,21 @@ export function startSharedServer(config, bridges) {
         
         // Se for forum, adiciona thread_name e applied_tags
         if (bridge.destination_type === 'forum') {
-          payload.thread_name = deriveTitle(url);
+          /* --- Busca dados Open Graph para enriquecer a postagem --- */
+          const ogData = await fetchOpenGraphData(url);
+          
+          // Define o título do thread usando og:title ou fallback para deriveTitle
+          if (ogData.title && ogData.title.trim()) {
+            payload.thread_name = ogData.title;
+          } else {
+            payload.thread_name = deriveTitle(url);
+          }
+          
+          // Adiciona a descrição Open Graph ao conteúdo, se existir
+          if (ogData.description && ogData.description.trim()) {
+            payload.content = `📄 ${ogData.description}\n\n${payload.content}`;
+          }
+          
           if (bridge.destination_tags) {
             payload.applied_tags = bridge.destination_tags;
           }
