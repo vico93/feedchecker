@@ -1,8 +1,8 @@
 /*
 ** caminho: src/instagramHelper.js
-** últimaMod: 2025-10-11 01:46
+** últimaMod: 2025-10-11 03:06
 ** autor: Vico
-** colaboração: GLM 4.5
+** colaboração: GLM 4.5, Grok Code (Fast)
 */
 
 import { spawn } from 'child_process';
@@ -19,10 +19,10 @@ import path from 'path';
 export function isInstagramUrl(url) {
   try {
     const urlObj = new URL(url);
-    const instagramHosts = ['instagram.com', 'm.instagram.com'];
+    const instagramHosts = ['instagram.com', 'www.instagram.com', 'm.instagram.com'];
     const instagramPaths = ['/p', '/reel', '/reels', '/tv'];
     
-    return instagramHosts.includes(urlObj.hostname) && 
+    return instagramHosts.includes(urlObj.hostname) &&
            instagramPaths.some(path => urlObj.pathname.startsWith(path));
   } catch (e) {
     return false;
