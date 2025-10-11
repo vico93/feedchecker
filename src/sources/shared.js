@@ -1,6 +1,6 @@
 /*
 ** caminho: src/sources/shared.js
-** últimaMod: 2025-10-11 05:38
+** últimaMod: 2025-10-11 18:17
 ** autor: Vico
 ** colaboração: GLM 4.5, Roo Sonic (xai/grok-code-fast-1)
 */
@@ -9,6 +9,7 @@ import http from 'http';
 import fs from 'fs/promises';
 import path from 'path';
 import { isInstagramUrl, downloadInstagramVideo, cleanupFile } from '../utils/uInstagram.js';
+import { isRedditUrl, getRedditPostInfo } from '../utils/uReddit.js';
 import { sendToDiscord, sendToDiscordWithFile } from '../destinations/discord.js';
 import { fetchOpenGraphData } from '../utils/uOpengraph.js';
 
@@ -207,6 +208,86 @@ export function startSharedServer(config, bridges) {
           
           // Outros erros
           throw error;
+        }
+      } else if (isRedditUrl(url)) {
+        /* --- Tratamento específico para URLs do Reddit --- */
+        console.log('[Shared][INFO] Enriquecendo link do Reddit via JSON...');
+        
+        try {
+          // Busca informações do post do Reddit
+          const info = await getRedditPostInfo(url);
+          
+          // Adiciona aviso NSFW se necessário
+          if (info.isNSFW) {
+            payload.content = '🔞 NSFW\n' + payload.content;
+          }
+          
+          // Prepara o conteúdo com base no texto do post
+          if (info.text && info.text.trim()) {
+            // Trunca o texto se for muito longo
+            const excerpt = info.text.length > 1000
+              ? info.text.substring(0, 1000) + '...'
+              : info.text;
+            payload.content = excerpt + '\n\n' + '➡️ ' + info.url;
+          } else {
+            payload.content = '➡️ ' + info.url;
+          }
+          
+          // Para fóruns, define o nome do thread e tags
+          if (bridge.destination_type === 'forum') {
+            payload.thread_name = info.title || deriveTitle(url);
+            if (bridge.destination_tags) {
+              payload.applied_tags = bridge.destination_tags;
+            }
+          }
+          
+          // Prepara o embed com informações do Reddit
+          const embed = {
+            title: info.title,
+            url: info.url,
+            footer: { text: `r/${info.subreddit} • u/${info.author}` }
+          };
+          
+          // Adiciona imagem ao embed se existir
+          if (info.imageUrl) {
+            embed.image = { url: info.imageUrl };
+          }
+          
+          // Se for vídeo, adiciona link no conteúdo (não usa embed.video)
+          if (info.videoUrl) {
+            payload.content += '\n🎞️ Vídeo: ' + info.videoUrl;
+          }
+          
+          // Se for galeria, usa primeira imagem no embed e lista as demais
+          if (info.galleryImages && info.galleryImages.length > 0) {
+            // Se não tem imageUrl, usa a primeira imagem da galeria
+            if (!info.imageUrl) {
+              embed.image = { url: info.galleryImages[0] };
+            }
+            
+            // Adiciona as imagens restantes ao conteúdo
+            for (let i = (info.imageUrl ? 0 : 1); i < info.galleryImages.length; i++) {
+              payload.content += '\n🖼️ ' + info.galleryImages[i];
+            }
+          }
+          
+          // Adiciona o embed ao payload se tiver conteúdo útil
+          if (embed.title && embed.url) {
+            payload.embeds = [embed];
+          }
+          
+          // Envia para o Discord
+          await sendToDiscord(bridge.destination_url, payload);
+          
+          res.writeHead(200, { 'Content-Type': 'text/plain' });
+          res.end('OK: Link do Reddit enviado para o Discord.');
+          
+          console.log('[Shared][SUCCESS] Link do Reddit enviado ao Discord.');
+        } catch (error) {
+          console.error('[Shared][ERROR] Falha ao enriquecer/enviar Reddit:', error.message);
+          res.writeHead(500, { 'Content-Type': 'text/plain' });
+          res.end('ERRO: Falha ao processar link do Reddit.');
+          return;
         }
       } else {
         console.log('[Shared][INFO] Enviando link para Discord...');
