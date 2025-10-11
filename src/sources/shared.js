@@ -8,9 +8,9 @@
 import http from 'http';
 import fs from 'fs/promises';
 import path from 'path';
-import { isInstagramUrl, downloadInstagramVideo, cleanupFile } from '../instagramHelper.js';
+import { isInstagramUrl, downloadInstagramVideo, cleanupFile } from '../utils/uInstagram.js';
 import { sendToDiscord, sendToDiscordWithFile } from '../destinations/discord.js';
-import { fetchOpenGraphData } from '../opengraphHelper.js';
+import { fetchOpenGraphData } from '../utils/uOpengraph.js';
 
 /* --- FUNÇÕES AUXILIARES --- */
 

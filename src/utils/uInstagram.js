@@ -1,8 +1,8 @@
 /*
-** caminho: src/instagramHelper.js
-** últimaMod: 2025-10-11 03:06
+** caminho: src/utils/uInstagram.js
+** últimaMod: 2025-10-11 17:30
 ** autor: Vico
-** colaboração: GLM 4.5, Grok Code (Fast)
+** colaboração: GLM 4.5, Grok Code (Fast), Roo Sonic (code-supernova-1-million)
 */
 
 import { spawn } from 'child_process';

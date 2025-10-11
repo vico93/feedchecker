@@ -1,8 +1,8 @@
 /*
-** caminho: src/opengraphHelper.js
-** últimaMod: 2025-10-11 02:32
+** caminho: src/utils/uOpengraph.js
+** últimaMod: 2025-10-11 17:33
 ** autor: Vico
-** colaboração: Roo Sonic (xai/grok-code-fast-1)
+** colaboração: Roo Sonic (xai/grok-code-fast-1), Roo Sonic (code-supernova-1-million)
 */
 
 import axios from 'axios';
