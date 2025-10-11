@@ -1,6 +1,6 @@
 /*
 ** caminho: index.js
-** últimaMod: 2025-10-11 01:50
+** últimaMod: 2025-10-11 02:24
 ** autor: Vico
 ** colaboração: Gemini 2.5 Pro, Roo Sonic (xai/grok-code-fast-1), Roo
 */
@@ -49,6 +49,18 @@ cron.schedule('*/5 * * * *', async () => {
   }
     
   for (const bridge of bridges) {
+    // Pula bridges com source_type "shared" pois elas são tratadas pelo servidor compartilhado
+    if (bridge.source_type === 'shared') {
+      console.log(`[Cron][INFO] ⏭️  Pulando bridge compartilhada: ${bridge.source_endpoint || 'endpoint não especificado'}`);
+      continue;
+    }
+    
+    // Verifica se source_url existe antes de usá-lo
+    if (!bridge.source_url) {
+      console.error(`[Cron][ERROR] Fonte sem URL especificada. Pulando bridge.`);
+      continue;
+    }
+    
     console.log(`[Cron][INFO] 🔎 Verificando fonte: ${bridge.source_url}`);
     
     // 1. Busca no banco de dados o último item processado para esta fonte.
