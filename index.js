@@ -2,7 +2,7 @@
 ** caminho: index.js
 ** últimaMod: 2025-10-11 02:24
 ** autor: Vico
-** colaboração: Gemini 2.5 Pro, Roo Sonic (xai/grok-code-fast-1), Roo
+** colaboração: Gemini 2.5 Pro, Roo Sonic (xai/grok-code-fast-1), GLM 4.5
 */
 
 import cron from 'node-cron';

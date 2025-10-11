@@ -2,7 +2,7 @@
 ** caminho: src/instagramHelper.js
 ** últimaMod: 2025-10-11 01:46
 ** autor: Vico
-** colaboração: Roo
+** colaboração: GLM 4.5
 */
 
 import { spawn } from 'child_process';

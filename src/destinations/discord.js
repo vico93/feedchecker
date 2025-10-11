@@ -2,7 +2,7 @@
 ** caminho: src/destinations/discord.js
 ** últimaMod: 2025-10-11 01:51
 ** autor: Vico
-** colaboração: Gemini 2.5 Pro, Roo
+** colaboração: Gemini 2.5 Pro, GLM 4.5
 */
 
 import axios from 'axios';

@@ -2,7 +2,7 @@
 ** caminho: src/sources/shared.js
 ** últimaMod: 2025-10-11 05:38
 ** autor: Vico
-** colaboração: Roo, Roo Sonic (xai/grok-code-fast-1)
+** colaboração: GLM 4.5, Roo Sonic (xai/grok-code-fast-1)
 */
 
 import http from 'http';
@@ -176,7 +176,7 @@ export function startSharedServer(config, bridges) {
             
             // Adiciona a descrição Open Graph ao conteúdo, se existir
             if (ogData.description && ogData.description.trim()) {
-              payload.content = `📄 ${ogData.description}\n\n${payload.content}`;
+              payload.content = `${ogData.description}\n\n${payload.content}`;
             }
             
             if (bridge.destination_tags) {
@@ -225,7 +225,7 @@ export function startSharedServer(config, bridges) {
           
           // Adiciona a descrição Open Graph ao conteúdo, se existir
           if (ogData.description && ogData.description.trim()) {
-            payload.content = `📄 ${ogData.description}\n\n${payload.content}`;
+            payload.content = `${ogData.description}\n\n${payload.content}`;
           }
           
           if (bridge.destination_tags) {
