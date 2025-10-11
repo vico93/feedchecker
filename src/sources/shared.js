@@ -1,6 +1,6 @@
 /*
 ** caminho: src/sources/shared.js
-** últimaMod: 2025-10-11 01:47
+** últimaMod: 2025-10-11 05:17
 ** autor: Vico
 ** colaboração: Roo
 */
@@ -84,7 +84,14 @@ export function startSharedServer(config, bridges) {
     
     // Extrai o endpoint da URL
     const urlParts = req.url.split('/');
-    const endpoint = urlParts[1]; // Ignora a barra inicial
+    let endpoint;
+    
+    // Verifica se o URL começa com /share/
+    if (urlParts[1] === 'share' && urlParts[2]) {
+      endpoint = urlParts[2]; // Usa o segmento após /share/
+    } else {
+      endpoint = urlParts[1]; // Mantém compatibilidade com o formato antigo
+    }
     
     // Verifica se o endpoint existe
     if (!endpoint || !endpoints.has(endpoint)) {
@@ -131,7 +138,7 @@ export function startSharedServer(config, bridges) {
         return res.end('ERRO: Corpo inválido; esperado JSON com atributo "url".');
       }
       
-      console.log(`[Shared][INFO] POST /${endpoint} url=${url}`);
+      console.log(`[Shared][INFO] POST ${req.url} url=${url}`);
       
       // Prepara o payload base
       const payload = {
