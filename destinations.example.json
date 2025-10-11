@@ -13,5 +13,18 @@
     "source_url": "https://bar.foo/feed/",
     "destination_url": "URL_DO_SEU_OUTRO_WEBHOOK_AQUI",
     "destination_type": "normal"
+  },
+  {
+    "source_type": "shared",
+    "source_endpoint": "share",
+    "destination_url": "URL_DO_SEU_WEBHOOK_AQUI",
+    "destination_type": "normal"
+  },
+  {
+    "source_type": "shared",
+    "source_endpoint": "share-forum",
+    "destination_url": "URL_DO_SEU_WEBHOOK_FÓRUM_AQUI",
+    "destination_type": "forum",
+    "destination_tags": ["12345678901234567890"]
   }
 ]

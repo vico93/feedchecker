@@ -1,0 +1,7 @@
+{
+  "bind_host": "0.0.0.0",
+  "port": 1993,
+  "temp_dir": "./.tmp",
+  "max_file_size_bytes": 8388608,
+  "token": null
+}
