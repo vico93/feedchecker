@@ -1,8 +1,8 @@
 /*
 ** caminho: index.js
-** últimaMod: 2025-09-20 20:05
+** últimaMod: 2025-10-11 00:15
 ** autor: Vico
-** colaboração: Gemini 2.5 Pro
+** colaboração: Gemini 2.5 Pro, Roo Sonic (xai/grok-code-fast-1)
 */
 
 import cron from 'node-cron';
@@ -21,9 +21,9 @@ cron.schedule('*/5 * * * *', async () => {
 
   let config;
   try {
-    config = JSON.parse(await fs.readFile('config.json', 'utf-8'));
+    config = JSON.parse(await fs.readFile('destinations.json', 'utf-8'));
   } catch (error) {
-    console.error('[Cron][ERROR] Erro ao ler o arquivo "config.json".', error.message);
+    console.error('[Cron][ERROR] Erro ao ler o arquivo "destinations.json".', error.message);
     return;
   }
     

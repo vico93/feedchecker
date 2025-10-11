@@ -9,8 +9,8 @@ Feedchecker, só que agora em Node.JS
     -   `sources/`: Contém os módulos para buscar dados de diferentes fontes. Atualmente, possui o `rss.js` para feeds RSS. Cada arquivo aqui deve ser capaz de buscar e retornar uma lista de novos itens de uma fonte específica.
     -   `destinations/`: Contém os módulos para enviar dados aos destinos configurados. O `discord.js` é responsável por formatar e enviar as mensagens para os webhooks do Discord.
     -   `storage.js`: O módulo de acesso ao banco de dados SQLite. **Todas as interações com o banco de dados DEVEM passar por este arquivo.**
--   `config.json`: Armazena **todas** as configurações para as "pontes" (bridges), como URLs de fontes e webhooks de destino. **NUNCA** adicione informações sensíveis (chaves de API, tokens) diretamente no código.
--   `config.example.json`: Como o `config.json` é um arquivo privado e sensível (e está ignorado pelo Git), este arquivo serve como um "template". Ele mostra a estrutura necessária para o `config.json` sem conter nenhuma URL ou dado privado. Se você fizer qualquer alteração na estrutura do `config.json`, deve replicá-la aqui (sem os dados privados).
+    -   `destinations.json`: Armazena **todas** as configurações para as "pontes" (bridges), como URLs de fontes e webhooks de destino. **NUNCA** adicione informações sensíveis (chaves de API, tokens) diretamente no código.
+    -   `destinations.example.json`: Como o `destinations.json` é um arquivo privado e sensível (e está ignorado pelo Git), este arquivo serve como um "template". Ele mostra a estrutura necessária para o `destinations.json` sem conter nenhuma URL ou dado privado. Se você fizer qualquer alteração na estrutura do `destinations.json`, deve replicá-la aqui (sem os dados privados).
 
 ## Instalação
 
@@ -35,13 +35,13 @@ Feedchecker, só que agora em Node.JS
 3.  **Crie seu arquivo de configuração:**
     -   Copie o arquivo de configuração de exemplo:
         ```bash
-        cp config.example.json config.json
+        cp destinations.example.json destinations.json
         ```
-    -   Abra o `config.json` e substitua os valores de exemplo pelas suas URLs reais de feeds RSS e webhooks do Discord.
+    -   Abra o `destinations.json` e substitua os valores de exemplo pelas suas URLs reais de feeds RSS e webhooks do Discord.
 
 ### Uso
 
-Assim que o arquivo `config.json` estiver configurado corretamente, simplesmente rode o script de início:
+Assim que o arquivo `destinations.json` estiver configurado corretamente, simplesmente rode o script de início:
 
 ```bash
 npm start

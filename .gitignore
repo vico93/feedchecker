@@ -24,3 +24,4 @@ lerna-debug.log*
 
 # Config files
 config.json
+destinations.json
