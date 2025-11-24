@@ -29,7 +29,7 @@ function buildPayloadFromRssItem(item, bridgeConfig) {
   const truncatedContent = contentAsMarkdown.substring(0, 1800);
 
   const payload = {
-    content: `${truncatedContent}\n\n➡️ ${link}`
+    content: `${truncatedContent}\n\n*[FONTE](${link})*`
   };
 
   if (destination_username) payload.username = destination_username;

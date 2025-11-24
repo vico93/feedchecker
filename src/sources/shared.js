@@ -144,7 +144,7 @@ export function startSharedServer(config, bridges) {
       
       // Prepara o payload base
       const payload = {
-        content: `➡️ ${url}`
+        content: `[LINK]({${url})`
       };
       
       // Adiciona username e avatar_url se fornecidos
@@ -228,9 +228,9 @@ export function startSharedServer(config, bridges) {
             const excerpt = info.text.length > 1000
               ? info.text.substring(0, 1000) + '...'
               : info.text;
-            payload.content = excerpt + '\n\n' + '➡️ ' + info.url;
+            payload.content = excerpt + '\n\n' + '[FONTE](' + info.url + ')';
           } else {
-            payload.content = '➡️ ' + info.url;
+            payload.content = '[FONTE](' + info.url + ')';
           }
           
           // Para fóruns, define o nome do thread e tags
