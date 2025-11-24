@@ -144,7 +144,7 @@ export function startSharedServer(config, bridges) {
       
       // Prepara o payload base
       const payload = {
-        content: `[LINK]({${url})`
+        content: `[LINK](${url})`
       };
       
       // Adiciona username e avatar_url se fornecidos
