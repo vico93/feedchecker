@@ -42,23 +42,10 @@ A estrutura modular deve ser rigorosamente respeitada:
 ### 3.2 Banco de Dados
 -   Nunca acesse o banco diretamente fora de `src/storage.js`.
 
-## 4. Ambiente e Deploy (Raspberry Pi)
-
-Este bot é executado em produção num **Raspberry Pi 3b+** (`Linux VICO-PI`).
-
--   **Gerenciador de Processos:** `systemd` (serviço: `feedchecker.service`).
--   **Fluxo de Deploy:**
-    1.  Commitar alterações (Local).
-    2.  SSH para o Pi (`vico@vico-pi`).
-    3.  `cd discord_bots/feedchecker`.
-    4.  `git pull`.
-    5.  Verificar logs: `journalctl -u feedchecker -f` (ou similar).
--   **Atenção:** Evite rodar `node index.js` localmente a menos que tenha certeza do ambiente/configuração. O foco é o deploy remoto.
-
-## 5. Git e Commits
+## 4. Git e Commits
 
 -   **Mensagens de Commit:** Sempre em **Português**.
 -   **Sugestão Final:** Ao final de uma tarefa, sugira um título (com prefixo convencional: `feat:`, `fix:`, `debug:`, etc.) e uma descrição para o commit.
 
 ## 6. Comandos Úteis
--   Start (Produção/Local se configurado): `npm start`
+-   Start: `npm start`
