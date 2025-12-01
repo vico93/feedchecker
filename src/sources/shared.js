@@ -8,7 +8,7 @@
 import http from 'http';
 import fs from 'fs/promises';
 import path from 'path';
-import { isInstagramUrl, downloadInstagramVideo, cleanupFile } from '../utils/uInstagram.js';
+import { isInstagramUrl, downloadInstagramVideo, cleanupFile, getInstagramDescription } from '../utils/uInstagram.js';
 import { isRedditUrl, getRedditPostInfo } from '../utils/uReddit.js';
 import { sendToDiscord, sendToDiscordWithFile } from '../destinations/discord.js';
 import { fetchOpenGraphData } from '../utils/uOpengraph.js';
@@ -165,19 +165,24 @@ export function startSharedServer(config, bridges) {
           
           // Se for forum, adiciona thread_name e applied_tags
           if (bridge.destination_type === 'forum') {
+            // Tenta obter a descrição real do post usando yt-dlp
+            const igDescription = await getInstagramDescription(url);
+            
             /* --- Busca dados Open Graph para enriquecer a postagem --- */
             const ogData = await fetchOpenGraphData(url);
             
             // Define o título do thread usando og:title ou fallback para deriveTitle
-            if (ogData.title && ogData.title.trim()) {
+            if (ogData.title && ogData.title.trim() && ogData.title !== 'Instagram') {
               payload.thread_name = ogData.title;
             } else {
               payload.thread_name = deriveTitle(url);
             }
             
-            // Adiciona a descrição Open Graph ao conteúdo, se existir
-            if (ogData.description && ogData.description.trim()) {
-              payload.content = `${ogData.description}\n\n${payload.content}`;
+            // Adiciona a descrição ao conteúdo (prioriza a do yt-dlp, fallback para OG)
+            const descriptionToAdd = igDescription || ogData.description;
+            
+            if (descriptionToAdd && descriptionToAdd.trim()) {
+              payload.content = `${descriptionToAdd}\n\n${payload.content}`;
             }
             
             if (bridge.destination_tags) {
