@@ -19,9 +19,6 @@ lerna-debug.log*
 .env.test.local
 .env.production.local
 
-# RooCode
-.roo/
-
 # Config files
 config.json
 destinations.json

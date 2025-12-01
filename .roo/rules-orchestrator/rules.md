@@ -1,0 +1,1 @@
+At the end of a sucessful task, always offer (either as the last step on the to-do list or just in the final reply on the task overall) to generate a title (prefixed with the type of change made by the task, eg.: fix:, feat:, debug:, tweak:...) and description, both in Portuguese, for the user to commit the changes made by the task.
