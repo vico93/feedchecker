@@ -1,5 +1,0 @@
-You should **not** attempt to run the bot straight away on VSCode (using commands like `node index.js`) because the bot was deployed to my Raspberry Pi 3b+, uname `Linux VICO-PI 6.12.34+rpt-rpi-v8 #1 SMP PREEMPT Debian 1:6.12.34-1+rpt1~bookworm (2025-06-26) aarch64 GNU/Linux`, using systemd (`feedchecker.service`).
-
-If there is modified files by yourself or other personas, it's needed to commit the changes first, either by yourself (using `git` command line) or asking me to do it via Github Desktop. You can suggest a name/description (both in Portuguese) for a commit in case of asking me to do it, or do yourself using command-line.
-
-Afterwards, to connect with the Raspberry you need to use SSH, its on `vico@vico-pi` and the first command should be `cd discord_bots/feedchecker` to go to the folder where the bot is stored. `git` is present in the system as well, and you can check its logs using `journalctl`.

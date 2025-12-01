@@ -115,6 +115,50 @@ export async function downloadInstagramVideo(url, tempDir, maxBytes) {
 }
 
 /**
+ * Obtém a descrição (caption) de um post do Instagram usando yt-dlp.
+ * @param {string} url - A URL do post do Instagram.
+ * @returns {Promise<string>} - A descrição do post ou string vazia se falhar.
+ */
+export async function getInstagramDescription(url) {
+  try {
+    console.log(`[InstagramHelper][INFO] Buscando descrição do post: ${url}`);
+    
+    const ytDlp = spawn('yt-dlp', [
+      '--print', 'description',
+      url
+    ]);
+    
+    let stdoutData = '';
+    
+    ytDlp.stdout.on('data', (data) => {
+      stdoutData += data.toString();
+    });
+    
+    await new Promise((resolve, reject) => {
+      ytDlp.on('close', (code) => {
+        if (code === 0) {
+          resolve();
+        } else {
+          // Não rejeita aqui para não quebrar o fluxo principal se falhar apenas a descrição
+          console.warn(`[InstagramHelper][WARN] Falha ao obter descrição (code ${code})`);
+          resolve(); 
+        }
+      });
+      
+      ytDlp.on('error', (error) => {
+        console.warn(`[InstagramHelper][WARN] Erro ao spawnar yt-dlp para descrição:`, error.message);
+        resolve();
+      });
+    });
+    
+    return stdoutData.trim();
+  } catch (error) {
+    console.error(`[InstagramHelper][ERROR] Falha inesperada ao obter descrição:`, error.message);
+    return '';
+  }
+}
+
+/**
  * Remove um arquivo de forma segura.
  * @param {string} filePath - O caminho do arquivo a ser removido.
  */
